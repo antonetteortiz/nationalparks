@@ -1,57 +1,70 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
-import './App.css';
+import React, { Component } from "react";
+import "./App.css";
+import { Link, Route, Switch, Redirect } from "react-router-dom";
+import Parks from "../src/Components/Parks";
+import ParkInfo from "../src/Components/ParkInfo";
+import Navbar from "../src/Components/Navbar";
 
-function App() {
-  const [date, setDate] = useState(null);
-  useEffect(() => {
-    async function getDate() {
-      const res = await fetch('/api/date');
-      const newDate = await res.text();
-      setDate(newDate);
-    }
-    getDate();
-  }, []);
-  return (
-    <main>
-      <h1>Create React App + Go API</h1>
-      <h2>
-        Deployed with{' '}
-        <a
-          href="https://vercel.com/docs"
-          target="_blank"
-          rel="noreferrer noopener"
-        >
-          Vercel
-        </a>
-        !
-      </h2>
-      <p>
-        <a
-          href="https://github.com/vercel/vercel/tree/master/examples/create-react-app"
-          target="_blank"
-          rel="noreferrer noopener"
-        >
-          This project
-        </a>{' '}
-        was bootstrapped with{' '}
-        <a href="https://facebook.github.io/create-react-app/">
-          Create React App
-        </a>{' '}
-        and contains three directories, <code>/public</code> for static assets,{' '}
-        <code>/src</code> for components and content, and <code>/api</code>{' '}
-        which contains a serverless <a href="https://golang.org/">Go</a>{' '}
-        function. See{' '}
-        <a href="/api/date">
-          <code>api/date</code> for the Date API with Go
-        </a>
-        .
-      </p>
-      <br />
-      <h2>The date according to Go is:</h2>
-      <p>{date ? date : 'Loading date...'}</p>
-    </main>
-  );
+class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      parks: [],
+    };
+  }
+
+  componentDidMount() {
+    let apiKey = "3dks8X8l8w0Ds47DSdDQEIfYfJ7Hw3Y1lxztQO3z";
+    let apiUrl =
+      "https://developer.nps.gov/api/v1/parks?&api_key=3dks8X8l8w0Ds47DSdDQEIfYfJ7Hw3Y1lxztQO3z";
+    fetch(apiUrl)
+      .then((data) => data.json())
+      .then((parks) => this.setState({ parks: parks.data }));
+  }
+
+  render() {
+    return (
+      <div>
+        <Navbar />
+        {/* <nav>
+          <Link to="/">
+            <div className="heading">
+              <h1>National Parks</h1>
+            </div>
+          </Link>
+        </nav> */}
+        <main>
+          <Switch>
+            <Route
+              exact
+              path="/"
+              render={() => {
+                return <Parks parkList={this.state.parks} />;
+              }}
+            />
+            {this.state.parks.length !== 0 ? (
+              <Route
+                exact
+                path="/parks/:id"
+                render={(routerProps) => {
+                  let park = this.state.parks.filter(
+                    (park) => park.id == routerProps.match.params.id
+                  );
+                  return <ParkInfo parkList={park} />;
+                }}
+              />
+            ) : null}
+          </Switch>
+        </main>
+        <footer>
+          <div className="logo">
+            <h2> National Park Services</h2>
+            <h1> U.S. Department of the Interior </h1>
+          </div>
+        </footer>
+      </div>
+    );
+  }
 }
 
 export default App;

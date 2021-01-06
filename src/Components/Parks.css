@@ -1,0 +1,43 @@
+.parkContainer {
+
+    height: auto;
+    display: flex;
+    /* flex-direction: column; */
+    flex-wrap: wrap;
+}
+
+.container {
+    height: 200px;
+    width: 200px;
+    border: 1px solid black;
+    margin: 10px;   
+    align-items: center;
+}
+
+
+.names {
+    width: 100px;
+    height: 100px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    margin: 10px;
+}
+
+.parkName {
+    color: white;
+    align-self: flex-end;
+    text-align: center;
+}
+
+.header {
+    background-color: black;
+}
+
+.logo {
+    background-color: black;
+    color: white;
+    background-color: black;
+    text-align: center;
+    font-size: 10px;
+}
